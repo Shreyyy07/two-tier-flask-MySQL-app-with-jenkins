@@ -3,15 +3,23 @@ import mysql.connector
 
 app = Flask(__name__)
 
-# Database connection
 db = mysql.connector.connect(
-    host="localhost",
+    host="db",   # IMPORTANT (service name)
     user="root",
-    password="Gonu@1394",  # replace this
+    password="root",
     database="twotier"
 )
 
 cursor = db.cursor()
+
+# Create table if not exists
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
+)
+""")
+db.commit()
 
 @app.route("/", methods=["GET"])
 def home():
@@ -51,4 +59,5 @@ def update_user(id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
+
